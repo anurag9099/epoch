@@ -1,0 +1,316 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════
+   WARM ACADEMIC — Design Tokens
+   ═══════════════════════════════════════════ */
+
+:root {
+  --bg-page:       #f3f2ec;
+  --bg-surface:    #ebe8df;
+  --bg-sunken:     #ddd9cf;
+  --bg-video:      #1a1510;
+  --bg-elevated:   rgba(255, 255, 255, 0.7);
+
+  --border:        rgba(15, 19, 24, 0.12);
+  --border-hover:  rgba(15, 19, 24, 0.22);
+
+  --text-ink:      #11161c;
+  --text-muted:    #44505c;
+  --text-hint:     #7c8792;
+  --text-disabled: #a4adb6;
+
+  --teal:          #1f8f62;
+  --teal-dim:      rgba(31, 143, 98, 0.10);
+  --teal-hover:    #16734d;
+  --rust:          #de6b2e;
+  --rust-dim:      rgba(222, 107, 46, 0.10);
+  --gold:          #b98316;
+  --gold-dim:      rgba(185, 131, 22, 0.10);
+
+  --radius-sm:     3px;
+  --radius-md:     6px;
+  --radius-lg:     8px;
+  --shell-gap:     24px;
+  --shell-padding: 16px;
+  --shell-sidebar-expanded-width: clamp(198px, 13vw, 220px);
+  --shell-sidebar-collapsed-width: 78px;
+  --shell-sidebar-width: var(--shell-sidebar-expanded-width);
+  --shell-content-max: 1240px;
+  --shell-content-padding: 22px clamp(10px, 1.4vw, 18px) 40px;
+  --mobile-content-padding: 72px 16px 88px;
+  --unity-panel-width: 304px;
+  --dashboard-gap: 18px;
+  --dashboard-card-radius: 22px;
+  --dashboard-card-padding: 18px;
+
+  --font-display:  Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-body:     -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono:     'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+[data-theme="dark"] {
+  --bg-page:       #11161c;
+  --bg-surface:    #19212a;
+  --bg-sunken:     #10171f;
+  --bg-video:      #090c11;
+  --bg-elevated:   rgba(28, 39, 50, 0.75);
+
+  --border:        rgba(217, 225, 232, 0.12);
+  --border-hover:  rgba(217, 225, 232, 0.22);
+
+  --text-ink:      #eef3f7;
+  --text-muted:    #b8c3cd;
+  --text-hint:     #7d8c98;
+  --text-disabled: #5f6c77;
+
+  --teal:          #4bc78f;
+  --teal-dim:      rgba(75, 199, 143, 0.13);
+  --teal-hover:    #3ba876;
+  --rust:          #ff9c61;
+  --rust-dim:      rgba(255, 156, 97, 0.12);
+  --gold:          #f1c567;
+  --gold-dim:      rgba(241, 197, 103, 0.12);
+}
+
+@media (max-width: 1500px) {
+  :root {
+    --shell-gap: 16px;
+    --shell-padding: 12px;
+    --shell-content-padding: 20px 12px 36px;
+    --unity-panel-width: 292px;
+  }
+}
+
+@media (max-width: 1240px) {
+  :root {
+    --shell-gap: 12px;
+    --shell-padding: 10px;
+    --unity-panel-width: 88px;
+    --shell-content-padding: 18px 10px 32px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--text-ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Grain texture — always present */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--teal);
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBARS — thin, warm, unobtrusive
+   ═══════════════════════════════════════════ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(28, 26, 23, 0.14) transparent;
+}
+*::-webkit-scrollbar { width: 3px; height: 3px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(28, 26, 23, 0.14);
+  border-radius: 3px;
+}
+
+[data-theme="dark"] * {
+  scrollbar-color: rgba(222, 230, 238, 0.18) transparent;
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb {
+  background: rgba(222, 230, 238, 0.18);
+}
+
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* ═══════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+   ═══════════════════════════════════════════ */
+
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+.font-mono    { font-family: var(--font-mono); }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+.animate-fade-in  { animation: fade-in 220ms ease-out both; }
+.animate-scale-in { animation: scale-in 160ms ease-out; }
+.animate-blink    { animation: blink 0.8s step-end infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-fade-in, .animate-scale-in { animation: none; }
+}
+
+/* ═══════════════════════════════════════════
+   SHADCN COMPAT (kept for installed components)
+   ═══════════════════════════════════════════ */
+
+@layer base {
+  :root {
+    --background: 45 30% 93%;
+    --foreground: 30 10% 10%;
+    --card: 38 22% 90%;
+    --card-foreground: 30 10% 10%;
+    --popover: 38 22% 90%;
+    --popover-foreground: 30 10% 10%;
+    --primary: 170 50% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 35 18% 86%;
+    --secondary-foreground: 30 10% 10%;
+    --muted: 35 18% 86%;
+    --muted-foreground: 30 8% 38%;
+    --accent: 35 18% 86%;
+    --accent-foreground: 30 10% 10%;
+    --destructive: 18 73% 43%;
+    --border: 30 10% 10% / 10%;
+    --input: 30 10% 10% / 10%;
+    --ring: 170 50% 32%;
+    --radius: 0.5rem;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: var(--dashboard-gap);
+}
+
+.dashboard-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--dashboard-card-radius);
+  padding: var(--dashboard-card-padding);
+  min-width: 0;
+}
+
+.dashboard-card--muted {
+  background: var(--bg-page);
+}
+
+/* ═══════════════════════════════════════════
+   UNITY CHAT — Markdown rendering
+   ═══════════════════════════════════════════ */
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Unity markdown rendering */
+.unity-markdown p { margin-bottom: 8px; }
+.unity-markdown p:last-child { margin-bottom: 0; }
+.unity-markdown ul, .unity-markdown ol { padding-left: 18px; margin-bottom: 8px; }
+.unity-markdown li { margin-bottom: 3px; font-size: 13px; line-height: 1.55; }
+.unity-markdown strong { font-weight: 500; color: var(--text-ink); }
+.unity-markdown table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 11px; }
+.unity-markdown th { background: var(--bg-sunken); text-align: left; padding: 4px 8px; font-weight: 500; border: 1px solid var(--border); }
+.unity-markdown td { padding: 4px 8px; border: 1px solid var(--border); }
+
+.unity-inline-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--rust);
+  background: var(--bg-sunken);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+.unity-code-block {
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 8px 0;
+  background: #16120e;
+}
+
+.unity-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px;
+  background: #1e1a14;
+  border-bottom: 1px solid #2a2520;
+}
+
+.unity-code-lang {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #5a5248;
+}
+
+.unity-code-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.unity-copy-btn {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: #8a8278;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+.unity-copy-btn:hover {
+  color: #c8c0b0;
+  background: #2a2520;
+}
+
+.unity-code-body {
+  padding: 10px 14px;
+  margin: 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.75;
+  color: #c8bfa8;
+}
+.unity-code-body code {
+  font-family: inherit;
+}
