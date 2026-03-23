@@ -1,0 +1,4 @@
+{"type":"server-started","port":57853,"host":"0.0.0.0","url_host":"localhost","url":"http://localhost:57853","screen_dir":"/home/ec2-user/epoch/.superpowers/brainstorm/2040572-1773829322"}
+{"type":"screen-added","file":"/home/ec2-user/epoch/.superpowers/brainstorm/2040572-1773829322/app-preview.html"}
+{"type":"screen-added","file":"/home/ec2-user/epoch/.superpowers/brainstorm/2040572-1773829322/responsive-preview.html"}
+{"type":"server-stopped","reason":"idle timeout"}

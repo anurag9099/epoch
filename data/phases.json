@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "Foundation Reset",
+    "slug": "foundation-reset",
+    "description": "Shift mental model from calling models to building the systems that train models. Understand the raw training loop -- forward pass, loss, backward pass, optimizer step -- at the code level, not the API level.",
+    "order_num": 1,
+    "start_week": 1,
+    "end_week": 1,
+    "gate_check_text": "Can I modify the training loop (change optimizer, add gradient clipping, swap scheduler) without docs? Y/N",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "name": "PyTorch Internals & GPU Fundamentals",
+    "slug": "pytorch-internals-gpu-fundamentals",
+    "description": "Think like a systems engineer about training. Understand memory, compute, and where bottlenecks live.",
+    "order_num": 2,
+    "start_week": 2,
+    "end_week": 2,
+    "gate_check_text": "Can I read a torch.profiler trace and explain what the GPU was doing at each point? Y/N",
+    "status": "locked"
+  },
+  {
+    "id": 3,
+    "name": "Distributed Training",
+    "slug": "distributed-training",
+    "description": "This is the core competency the role demands. Make training work across multiple GPUs and nodes.",
+    "order_num": 3,
+    "start_week": 3,
+    "end_week": 3,
+    "gate_check_text": "Can I shard a model that OOMs on 1 GPU across 4 GPUs, train it, checkpoint it, and resume? Y/N\nCan I explain DDP vs FSDP vs DeepSpeed ZeRO tradeoffs? Y/N",
+    "status": "locked"
+  },
+  {
+    "id": 4,
+    "name": "RLHF & Alignment Algorithms",
+    "slug": "rlhf-alignment-algorithms",
+    "description": "Understand the full post-training pipeline that produces models like Claude. This is the domain-specific knowledge the role requires.",
+    "order_num": 4,
+    "start_week": 4,
+    "end_week": 5,
+    "gate_check_text": "Can I run the full SFT -> RM -> PPO pipeline end-to-end? Y/N\nCan I explain PPO vs DPO vs GRPO tradeoffs clearly? Y/N\nHave I done this distributed across multiple GPUs? Y/N",
+    "status": "locked"
+  },
+  {
+    "id": 5,
+    "name": "Systems Engineering & Performance",
+    "slug": "systems-engineering-performance",
+    "description": "Bridge from ML practitioner who can train models to systems engineer who makes training infrastructure fast, reliable, and usable.",
+    "order_num": 5,
+    "start_week": 5,
+    "end_week": 5,
+    "gate_check_text": "Can I profile end-to-end and distinguish GIL vs GPU vs data loading bottlenecks? Y/N\nDo I have working infra utilities (launcher, checkpointer, metrics)? Y/N",
+    "status": "locked"
+  },
+  {
+    "id": 6,
+    "name": "Agentic AI & Training Systems",
+    "slug": "agentic-ai-training-systems",
+    "description": "Combine your strong agentic AI background with training systems knowledge. This is your differentiator -- most training infra people don't understand agents, and most agent builders don't understand training.",
+    "order_num": 6,
+    "start_week": 6,
+    "end_week": 6,
+    "gate_check_text": "Can I explain how tool-use gets trained INTO models (not just prompted)? Y/N\nHave I trained a model to use tools via RL? Y/N",
+    "status": "locked"
+  },
+  {
+    "id": 7,
+    "name": "Portfolio & Open Source",
+    "slug": "portfolio-open-source",
+    "description": "Build visible proof of your new skills. Code speaks louder than bullet points. Clean GitHub repo, OSS contributions, and technical blog posts.",
+    "order_num": 7,
+    "start_week": 6,
+    "end_week": 6,
+    "gate_check_text": "Does my GitHub repo demonstrate training infrastructure competency? Y/N\nDo I have at least 1 merged OSS PR on a training framework? Y/N\nAre at least 2 blog posts published? Y/N",
+    "status": "locked"
+  }
+]

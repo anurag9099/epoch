@@ -1,0 +1,52 @@
+[
+  {"task_id": 1, "label": "Intro & Setup (0:00 - 12:00)", "order_num": 1},
+  {"task_id": 1, "label": "Bigram Language Model (12:00 - 28:00)", "order_num": 2},
+  {"task_id": 1, "label": "Self-Attention Mechanism (28:00 - 58:00)", "order_num": 3},
+  {"task_id": 1, "label": "Multi-Head Attention & Transformer Block (58:00 - 1:25:00)", "order_num": 4},
+  {"task_id": 1, "label": "Training & Generation (1:25:00 - 1:56:00)", "order_num": 5},
+
+  {"task_id": 2, "label": "Setup & Tokenizer (0:00 - 25:00)", "order_num": 1},
+  {"task_id": 2, "label": "DataLoader & Batching (25:00 - 50:00)", "order_num": 2},
+  {"task_id": 2, "label": "Model Architecture (50:00 - 1:20:00)", "order_num": 3},
+  {"task_id": 2, "label": "Training Loop & Optimization (1:20:00 - 2:00:00)", "order_num": 4},
+  {"task_id": 2, "label": "Learning Rate Scheduling (2:00:00 - 2:30:00)", "order_num": 5},
+  {"task_id": 2, "label": "Gradient Accumulation & Mixed Precision (2:30:00 - 3:00:00)", "order_num": 6},
+  {"task_id": 2, "label": "Evaluation & Speedrunning (3:00:00 - 3:40:00)", "order_num": 7},
+  {"task_id": 2, "label": "Multi-GPU & DDP (3:40:00 - 4:01:00)", "order_num": 8},
+
+  {"task_id": 3, "label": "LLM Overview & Inference (0:00 - 20:00)", "order_num": 1},
+  {"task_id": 3, "label": "Training Pipeline (20:00 - 38:00)", "order_num": 2},
+  {"task_id": 3, "label": "Future Directions & Security (38:00 - 59:00)", "order_num": 3},
+
+  {"task_id": 4, "label": "Neural Networks Intro (Video 1)", "order_num": 1},
+  {"task_id": 4, "label": "Gradient Descent (Video 2)", "order_num": 2},
+  {"task_id": 4, "label": "Backpropagation (Video 3)", "order_num": 3},
+  {"task_id": 4, "label": "Backpropagation Calculus (Video 4)", "order_num": 4},
+
+  {"task_id": 5, "label": "Intro & Paper Overview (0:00 - 15:00)", "order_num": 1},
+  {"task_id": 5, "label": "Input Embeddings & Positional Encoding (15:00 - 35:00)", "order_num": 2},
+  {"task_id": 5, "label": "Multi-Head Attention (35:00 - 1:05:00)", "order_num": 3},
+  {"task_id": 5, "label": "Encoder & Decoder (1:05:00 - 1:35:00)", "order_num": 4},
+  {"task_id": 5, "label": "Training & Inference (1:35:00 - 2:00:00)", "order_num": 5},
+
+  {"task_id": 15, "label": "3D Parallelism and System Design", "order_num": 1},
+  {"task_id": 15, "label": "Checkpointing, Fault Tolerance, and Data Pipeline", "order_num": 2},
+  {"task_id": 15, "label": "Float8, torch.compile, and Performance Tradeoffs", "order_num": 3},
+  {"task_id": 15, "label": "Practical Lessons from Large-Scale Training", "order_num": 4},
+
+  {"task_id": 16, "label": "CUDA Basics & Thread Model (Videos 1-2)", "order_num": 1},
+  {"task_id": 16, "label": "Memory Hierarchy (Videos 3-4)", "order_num": 2},
+  {"task_id": 16, "label": "Shared Memory & Optimization (Videos 5-6)", "order_num": 3},
+
+  {"task_id": 17, "label": "Why Mixed Precision Matters", "order_num": 1},
+  {"task_id": 17, "label": "FP16 vs BF16", "order_num": 2},
+  {"task_id": 17, "label": "Loss Scaling and PyTorch Implementation", "order_num": 3},
+
+  {"task_id": 18, "label": "Profiler Setup", "order_num": 1},
+  {"task_id": 18, "label": "Reading Traces", "order_num": 2},
+  {"task_id": 18, "label": "Identifying Bottlenecks", "order_num": 3},
+
+  {"task_id": 19, "label": "Compiled Autograd Basics", "order_num": 1},
+  {"task_id": 19, "label": "DDP and FSDP Integration", "order_num": 2},
+  {"task_id": 19, "label": "Graph Breaks, Guards, and Performance Tradeoffs", "order_num": 3}
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "bullet_text": "Fine-tuned Llama-3 8B on Scania's proprietary compliance corpus (200K+ documents, 40+ languages) for CSD document classification across 65 regulatory categories, improving F1 score by [X]% over zero-shot Claude baselines through supervised fine-tuning on curated category-labeled data and domain-specific tokenization",
+    "placeholder": "[X]% over zero-shot Claude baselines"
+  },
+  {
+    "id": 2,
+    "bullet_text": "Built distributed training pipeline on multi-GPU HPC cluster using PyTorch FSDP with mixed precision (BF16) and gradient checkpointing to train 8B parameter models within Scania's on-premise infrastructure. Reduced per-run training time from [X] hours to [X] hours by profiling with torch.profiler, resolving data loader GIL contention via multiprocessing workers, and integrating FlashAttention-2",
+    "placeholder": "from [X] hours to [X] hours"
+  },
+  {
+    "id": 3,
+    "bullet_text": "Implemented DPO-based preference alignment using human-in-the-loop feedback collected from 12-person compliance team's monthly review cycles — converted override decisions into preference pairs, improving classification agreement with human reviewers from [X]% to [X]% on ambiguous cross-lingual documents",
+    "placeholder": "from [X]% to [X]%"
+  }
+]

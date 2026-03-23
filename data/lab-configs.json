@@ -1,0 +1,70 @@
+{
+  "10": {
+    "id": "gpt2-from-scratch",
+    "title": "Train GPT-2 (124M) from scratch in raw PyTorch",
+    "requiresGPU": true,
+    "videoTaskId": 1,
+    "files": ["train.py", "model.py"],
+    "defaultFile": "train.py",
+    "steps": [
+      {
+        "id": 1,
+        "title": "Set up environment",
+        "description": "Verify your GPU is available and import the required libraries.",
+        "hint": "If CUDA is not available, check your PyTorch installation with: pip install torch --index-url https://download.pytorch.org/whl/cu121",
+        "videoTimestamp": 0,
+        "codeMarker": "Step 1"
+      },
+      {
+        "id": 2,
+        "title": "Define model architecture",
+        "description": "Implement a GPT-2 style transformer with token embeddings, positional embeddings, transformer blocks, and a language model head.",
+        "hint": "The Block class needs multi-head self-attention + MLP with GELU activation. Don't forget residual connections: x = x + attn(x).",
+        "videoTimestamp": 1680,
+        "codeMarker": "Step 2"
+      },
+      {
+        "id": 3,
+        "title": "Write the training loop",
+        "description": "Standard training loop: forward pass → loss → backward → optimizer step. Log loss every 100 steps. Use AdamW with lr=3e-4.",
+        "hint": "Call optimizer.zero_grad() BEFORE loss.backward(). Use set_to_none=True for a small perf boost.",
+        "videoTimestamp": 3480,
+        "codeMarker": "Step 3"
+      },
+      {
+        "id": 4,
+        "title": "Record your results",
+        "description": "Run training for 5,000+ steps. Record your final loss and throughput. Compare against the targets.",
+        "hint": "Loss should decrease to ~3.0–3.5 after 5K steps. If stuck above 4.0, check attention mask or positional embeddings.",
+        "videoTimestamp": null,
+        "codeMarker": "Step 4"
+      }
+    ],
+    "measurements": [
+      {
+        "key": "loss",
+        "label": "Final training loss",
+        "target": "Target: below 3.5 after 5,000+ steps",
+        "unit": "",
+        "parsePattern": "loss[:\\s]+([\\d.]+)"
+      },
+      {
+        "key": "throughput",
+        "label": "Training throughput",
+        "target": "Typical T4: 12K–18K · A100: 40K–80K tok/s",
+        "unit": "tok/s",
+        "parsePattern": "throughput[:\\s]+([\\d,]+)"
+      }
+    ],
+    "checklist": [
+      "Code ran and produced expected output",
+      "Final loss recorded in measurements",
+      "I can explain what loss.backward() does",
+      "I understand the role of each training loop step"
+    ],
+    "starterCode": {
+      "train.py": "import torch\nimport torch.nn as nn\nfrom torch.nn import functional as F\nfrom model import GPT\nimport time\n\n# ── Step 1: Set up environment ──\nprint(f'CUDA available: {torch.cuda.is_available()}')\ndevice = 'cuda' if torch.cuda.is_available() else 'cpu'\nprint(f'Using device: {device}')\n\n# Config\nbatch_size = 32\nblock_size = 256\nmax_steps = 5000\neval_interval = 100\nlearning_rate = 3e-4\n\n# Load your dataset here\n# text = open('data.txt').read()\n# chars = sorted(set(text))\n# vocab_size = len(chars)\nvocab_size = 65  # placeholder\n\n# ── Step 2: Create model ──\nmodel = GPT(\n    vocab_size=vocab_size,\n    n_embd=384,\n    n_head=6,\n    n_layer=6,\n    block_size=block_size,\n).to(device)\n\nprint(f'Parameters: {sum(p.numel() for p in model.parameters())/1e6:.1f}M')\n\n# ── Step 3: Training loop ──\noptimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)\n\nfor step in range(max_steps):\n    # Get a batch (implement your data loader)\n    # xb, yb = get_batch('train')\n    xb = torch.randint(0, vocab_size, (batch_size, block_size), device=device)\n    yb = torch.randint(0, vocab_size, (batch_size, block_size), device=device)\n\n    # Forward\n    logits, loss = model(xb, yb)\n\n    # Backward\n    optimizer.zero_grad(set_to_none=True)\n    loss.backward()\n    optimizer.step()\n\n    if step % eval_interval == 0:\n        print(f'step {step}: loss {loss.item():.4f}')\n\n# ── Step 4: Record results ──\nprint(f'\\nFinal loss: {loss.item():.4f}')\n\n# Measure throughput\ntorch.cuda.synchronize() if device == 'cuda' else None\nt0 = time.time()\nfor _ in range(100):\n    logits, loss = model(xb, yb)\n    loss.backward()\n    optimizer.step()\n    optimizer.zero_grad(set_to_none=True)\nif device == 'cuda': torch.cuda.synchronize()\ndt = time.time() - t0\ntokens_per_sec = int(100 * xb.numel() / dt)\nprint(f'Throughput: {tokens_per_sec} tok/s')",
+      "model.py": "import torch\nimport torch.nn as nn\nfrom torch.nn import functional as F\nimport math\n\n# ── Step 2: Define model architecture ──\n\nclass Head(nn.Module):\n    \"\"\"Single head of self-attention.\"\"\"\n    def __init__(self, n_embd, head_size, block_size):\n        super().__init__()\n        self.key = nn.Linear(n_embd, head_size, bias=False)\n        self.query = nn.Linear(n_embd, head_size, bias=False)\n        self.value = nn.Linear(n_embd, head_size, bias=False)\n        self.register_buffer('tril',\n            torch.tril(torch.ones(block_size, block_size)))\n\n    def forward(self, x):\n        B, T, C = x.shape\n        k = self.key(x)    # (B, T, head_size)\n        q = self.query(x)  # (B, T, head_size)\n        # Attention scores\n        wei = q @ k.transpose(-2, -1) * (C ** -0.5)\n        wei = wei.masked_fill(\n            self.tril[:T, :T] == 0, float('-inf'))\n        wei = F.softmax(wei, dim=-1)\n        v = self.value(x)\n        return wei @ v\n\n\nclass MultiHeadAttention(nn.Module):\n    def __init__(self, n_embd, n_head, block_size):\n        super().__init__()\n        head_size = n_embd // n_head\n        self.heads = nn.ModuleList(\n            [Head(n_embd, head_size, block_size)\n             for _ in range(n_head)])\n        self.proj = nn.Linear(n_embd, n_embd)\n\n    def forward(self, x):\n        out = torch.cat(\n            [h(x) for h in self.heads], dim=-1)\n        return self.proj(out)\n\n\nclass FeedForward(nn.Module):\n    def __init__(self, n_embd):\n        super().__init__()\n        self.net = nn.Sequential(\n            nn.Linear(n_embd, 4 * n_embd),\n            nn.GELU(),\n            nn.Linear(4 * n_embd, n_embd),\n        )\n\n    def forward(self, x):\n        return self.net(x)\n\n\nclass Block(nn.Module):\n    def __init__(self, n_embd, n_head, block_size=1024):\n        super().__init__()\n        self.sa = MultiHeadAttention(\n            n_embd, n_head, block_size)\n        self.ffwd = FeedForward(n_embd)\n        self.ln1 = nn.LayerNorm(n_embd)\n        self.ln2 = nn.LayerNorm(n_embd)\n\n    def forward(self, x):\n        x = x + self.sa(self.ln1(x))   # residual\n        x = x + self.ffwd(self.ln2(x)) # residual\n        return x\n\n\nclass GPT(nn.Module):\n    def __init__(self, vocab_size, n_embd=768, n_head=12,\n                 n_layer=12, block_size=1024):\n        super().__init__()\n        self.block_size = block_size\n        self.tok_emb = nn.Embedding(vocab_size, n_embd)\n        self.pos_emb = nn.Embedding(block_size, n_embd)\n        self.blocks = nn.Sequential(\n            *[Block(n_embd, n_head, block_size)\n              for _ in range(n_layer)])\n        self.ln_f = nn.LayerNorm(n_embd)\n        self.head = nn.Linear(n_embd, vocab_size, bias=False)\n\n    def forward(self, idx, targets=None):\n        B, T = idx.shape\n        tok = self.tok_emb(idx)\n        pos = self.pos_emb(\n            torch.arange(T, device=idx.device))\n        x = self.blocks(tok + pos)\n        logits = self.head(self.ln_f(x))\n        loss = None\n        if targets is not None:\n            loss = F.cross_entropy(\n                logits.view(-1, logits.size(-1)),\n                targets.view(-1))\n        return logits, loss"
+    }
+  }
+}

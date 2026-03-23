@@ -1,0 +1,245 @@
+[
+  {
+    "phase_id": 1,
+    "lab_title": "Train GPT-2 from scratch",
+    "field_name": "Final training loss",
+    "field_unit": "",
+    "placeholder_text": "e.g. 3.2",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 1,
+    "lab_title": "Train GPT-2 from scratch",
+    "field_name": "Training throughput",
+    "field_unit": "tokens/sec",
+    "placeholder_text": "e.g. 15000",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 2,
+    "lab_title": "Mixed precision training",
+    "field_name": "FP32 memory usage",
+    "field_unit": "GB",
+    "placeholder_text": "e.g. 24",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 2,
+    "lab_title": "Mixed precision training",
+    "field_name": "BF16 memory usage",
+    "field_unit": "GB",
+    "placeholder_text": "e.g. 14",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 2,
+    "lab_title": "Profiling with torch.profiler",
+    "field_name": "Data loading time %",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 35",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 2,
+    "lab_title": "Profiling with torch.profiler",
+    "field_name": "Forward pass time %",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 25",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 2,
+    "lab_title": "Profiling with torch.profiler",
+    "field_name": "Backward pass time %",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 35",
+    "resume_placeholder": null,
+    "order_num": 3
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "DDP scaling test",
+    "field_name": "2-GPU scaling efficiency",
+    "field_unit": "x",
+    "placeholder_text": "e.g. 1.85",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "FSDP training",
+    "field_name": "FSDP memory per GPU",
+    "field_unit": "GB",
+    "placeholder_text": "e.g. 12",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "FSDP training",
+    "field_name": "DDP memory per GPU",
+    "field_unit": "GB",
+    "placeholder_text": "e.g. 32",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "FSDP vs DeepSpeed comparison",
+    "field_name": "FSDP throughput",
+    "field_unit": "tokens/sec",
+    "placeholder_text": "e.g. 25000",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "FSDP vs DeepSpeed comparison",
+    "field_name": "DeepSpeed ZeRO-3 throughput",
+    "field_unit": "tokens/sec",
+    "placeholder_text": "e.g. 23000",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "Distributed training pipeline",
+    "field_name": "Training time before optimization",
+    "field_unit": "hours",
+    "placeholder_text": "e.g. 14",
+    "resume_placeholder": "[X] hours to [X] hours (before)",
+    "order_num": 1
+  },
+  {
+    "phase_id": 3,
+    "lab_title": "Distributed training pipeline",
+    "field_name": "Training time after optimization",
+    "field_unit": "hours",
+    "placeholder_text": "e.g. 3.5",
+    "resume_placeholder": "[X] hours to [X] hours (after)",
+    "order_num": 2
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "SFT on CSD data",
+    "field_name": "F1 improvement over zero-shot",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 12",
+    "resume_placeholder": "[X]% over zero-shot Claude baselines",
+    "order_num": 1
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "SFT on CSD data",
+    "field_name": "SFT model F1 score",
+    "field_unit": "",
+    "placeholder_text": "e.g. 0.87",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "SFT on CSD data",
+    "field_name": "Zero-shot baseline F1 score",
+    "field_unit": "",
+    "placeholder_text": "e.g. 0.75",
+    "resume_placeholder": null,
+    "order_num": 3
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "DPO preference alignment",
+    "field_name": "Agreement before DPO",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 73",
+    "resume_placeholder": "from [X]% to [X]% (before)",
+    "order_num": 1
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "DPO preference alignment",
+    "field_name": "Agreement after DPO",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 89",
+    "resume_placeholder": "from [X]% to [X]% (after)",
+    "order_num": 2
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "DPO preference alignment",
+    "field_name": "Number of preference pairs",
+    "field_unit": "",
+    "placeholder_text": "e.g. 2500",
+    "resume_placeholder": null,
+    "order_num": 3
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "PPO RLHF run",
+    "field_name": "PPO reward mean",
+    "field_unit": "",
+    "placeholder_text": "e.g. 3.2",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 4,
+    "lab_title": "GRPO experiment",
+    "field_name": "GRPO reward mean",
+    "field_unit": "",
+    "placeholder_text": "e.g. 3.5",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 5,
+    "lab_title": "GIL contention fix",
+    "field_name": "GPU idle time before fix",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 35",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 5,
+    "lab_title": "GIL contention fix",
+    "field_name": "GPU idle time after fix",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 8",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 5,
+    "lab_title": "FlashAttention integration",
+    "field_name": "Speed improvement",
+    "field_unit": "x",
+    "placeholder_text": "e.g. 2.3",
+    "resume_placeholder": null,
+    "order_num": 1
+  },
+  {
+    "phase_id": 5,
+    "lab_title": "FlashAttention integration",
+    "field_name": "Memory reduction",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 40",
+    "resume_placeholder": null,
+    "order_num": 2
+  },
+  {
+    "phase_id": 6,
+    "lab_title": "Agent tool-use training",
+    "field_name": "Tool selection accuracy",
+    "field_unit": "%",
+    "placeholder_text": "e.g. 85",
+    "resume_placeholder": null,
+    "order_num": 1
+  }
+]
