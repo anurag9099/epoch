@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  epoch:
+    build: .
+    container_name: epoch
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./db:/app/db          # Persist SQLite database
+      - ./.env.local:/app/.env.local:ro  # Mount env vars
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+
