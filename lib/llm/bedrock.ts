@@ -2,6 +2,7 @@ import {
   BedrockRuntimeClient,
   ConverseStreamCommand,
 } from "@aws-sdk/client-bedrock-runtime";
+import type { ChatTurn } from "./provider";
 
 const client = new BedrockRuntimeClient({
   region: process.env.AWS_REGION || "us-east-1",
@@ -19,14 +20,13 @@ const client = new BedrockRuntimeClient({
     : {}),
 });
 
-const MODEL_ID = process.env.BEDROCK_MODEL_ID || "anthropic.claude-sonnet-4-6";
-
 export async function* streamBedrock(
   systemPrompt: string,
-  messages: Array<{ role: string; content: string }>
+  messages: ChatTurn[],
+  model = process.env.BEDROCK_MODEL_ID || process.env.LLM_MODEL || "anthropic.claude-sonnet-4-6"
 ): AsyncGenerator<string> {
   const command = new ConverseStreamCommand({
-    modelId: MODEL_ID,
+    modelId: model,
     system: [{ text: systemPrompt }],
     messages: messages.map((m) => ({
       role: m.role as "user" | "assistant",

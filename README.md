@@ -47,17 +47,17 @@ Epoch is a proof-first AI/ML learning system for software engineers and junior M
 ### Intelligence Layer
 - Signal-driven instead of purely heuristic topic scoring
 - Explicit signal families:
-  - mastery
-  - confusion
-  - drift
-  - momentum
-  - proof gap
-  - recommendation opportunity
+    - mastery
+    - confusion
+    - drift
+    - momentum
+    - proof gap
+    - recommendation opportunity
 - Signals feed:
-  - dashboard briefing
-  - Lens `For You`
-  - nudges
-  - Unity context
+    - dashboard briefing
+    - Lens `For You`
+    - nudges
+    - Unity context
 
 ### Unity
 - GPT-only path pinned to `gpt-5.4`
@@ -109,6 +109,10 @@ AWS_SECRET_ACCESS_KEY=...
 AWS_REGION=us-east-1
 TURSO_URL=...
 TURSO_AUTH_TOKEN=...
+LLM_PROVIDER=...
+LLM_MODEL=...
+OLLAMA_BASE_URL=...
+OLLAMA_API_KEY=...
 ```
 
 Notes:
