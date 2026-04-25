@@ -8,11 +8,49 @@ import { summarizeSession } from "@/lib/unity-memory";
 import type { ChatAttachment } from "@/lib/chat-attachments";
 import { buildStoredUserMessage } from "@/lib/chat-attachments";
 import { resolveChatAttachments } from "@/lib/document-extractor";
+import type { LlmProvider } from "@/lib/llm/provider";
+
+const VALID_PROVIDERS = new Set<LlmProvider>(["openai", "bedrock", "ollama"]);
+
+function resolveProvider(provider: unknown): LlmProvider {
+  if (typeof provider === "string" && VALID_PROVIDERS.has(provider as LlmProvider)) {
+    return provider as LlmProvider;
+  }
+  const fromEnv = (process.env.LLM_PROVIDER || "openai").toLowerCase();
+  if (VALID_PROVIDERS.has(fromEnv as LlmProvider)) {
+    return fromEnv as LlmProvider;
+  }
+  return "openai";
+}
+
+function parseOptionalId(value: unknown): number | null {
+  if (typeof value === "number" && Number.isInteger(value) && value > 0) {
+    return value;
+  }
+  if (typeof value === "string" && /^\d+$/.test(value)) {
+    const parsed = Number(value);
+    return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
-  const { message, taskId, phaseId, attachments = [], session_id } =
+  const { message, taskId, phaseId, attachments = [], session_id, provider, model } =
     await req.json();
-  const model = "gpt-5.4";
+  const selectedProvider = resolveProvider(provider);
+  const selectedModel =
+    typeof model === "string" && model.trim().length > 0
+      ? model.trim()
+      : process.env.LLM_MODEL ||
+        (selectedProvider === "ollama"
+          ? "gemma3:4b"
+          : selectedProvider === "bedrock"
+            ? process.env.BEDROCK_MODEL_ID || "anthropic.claude-sonnet-4-6"
+            : "gpt-5.4");
+  const storedModel = `${selectedProvider}:${selectedModel}`;
+  const parsedTaskId = parseOptionalId(taskId);
+  const parsedPhaseId = parseOptionalId(phaseId);
+  const parsedSessionId = parseOptionalId(session_id);
   const safeAttachments = Array.isArray(attachments) ? (attachments as ChatAttachment[]) : [];
   const visibleMessage = typeof message === "string" ? message : "";
   const resolvedAttachments = await resolveChatAttachments(safeAttachments);
@@ -23,24 +61,49 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // Validate incoming context to avoid foreign-key failures from stale local state.
+  const validTask = parsedTaskId
+    ? await get("SELECT id, phase_id FROM tasks WHERE id = ?", [parsedTaskId])
+    : null;
+  const validTaskId = validTask ? (validTask.id as number) : null;
+
+  const validPhaseIdFromTask = validTask ? (validTask.phase_id as number) : null;
+  const validPhase = parsedPhaseId
+    ? await get("SELECT id FROM phases WHERE id = ?", [parsedPhaseId])
+    : null;
+  const validPhaseId = validPhaseIdFromTask ?? (validPhase ? (validPhase.id as number) : null);
+
   // Resolve or create session
-  let sessionId = session_id;
+  let sessionId = parsedSessionId;
+  if (sessionId) {
+    const existingSession = await get("SELECT id FROM chat_sessions WHERE id = ?", [sessionId]);
+    if (!existingSession) {
+      sessionId = null;
+    }
+  }
+
   if (!sessionId) {
     await execute(
       `INSERT INTO chat_sessions (title, phase_id, task_id, model)
        VALUES (?, ?, ?, ?)`,
-      ["New conversation", phaseId || null, taskId || null, model]
+      ["New conversation", validPhaseId, validTaskId, storedModel]
     );
     const newSession = await get(
       "SELECT id FROM chat_sessions ORDER BY id DESC LIMIT 1"
     );
-    sessionId = newSession?.id;
+    sessionId = (newSession?.id as number | undefined) ?? null;
+  }
+
+  if (!sessionId) {
+    return new Response(JSON.stringify({ error: "Failed to create chat session" }), {
+      status: 500,
+    });
   }
 
   // Save user message
   await execute(
     "INSERT INTO chat_messages (session_id, phase_id, task_id, role, content, model) VALUES (?, ?, ?, 'user', ?, ?)",
-    [sessionId, phaseId || null, taskId || null, buildStoredUserMessage(visibleMessage, resolvedAttachments), model]
+    [sessionId, validPhaseId, validTaskId, buildStoredUserMessage(visibleMessage, resolvedAttachments), storedModel]
   );
   const userMessageRow = await get("SELECT id FROM chat_messages ORDER BY id DESC LIMIT 1");
   const userMessageId = userMessageRow?.id as number | undefined;
@@ -49,8 +112,8 @@ export async function POST(req: NextRequest) {
   const chatTopic = matchTopic(message);
   await trackEvent("chat_question", {
     topic: chatTopic ?? undefined,
-    phaseId: phaseId || undefined,
-    taskId: taskId || undefined,
+    phaseId: validPhaseId || undefined,
+    taskId: validTaskId || undefined,
     payload: { hint: visibleMessage.split(/\s+/).slice(0, 3).join(" ") },
   });
 
@@ -70,7 +133,7 @@ export async function POST(req: NextRequest) {
   }));
 
   // Build system prompt with full context
-  const systemPrompt = await buildSystemPrompt({ phaseId, taskId });
+  const systemPrompt = await buildSystemPrompt({ phaseId: validPhaseId ?? undefined, taskId: validTaskId ?? undefined });
 
   // Create streaming response
   const encoder = new TextEncoder();
@@ -80,8 +143,10 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       try {
         const generator = streamChat(
+          selectedProvider,
           systemPrompt,
-          messages
+          messages,
+          selectedModel
         );
         for await (const chunk of generator) {
           fullResponse += chunk;
@@ -93,7 +158,7 @@ export async function POST(req: NextRequest) {
         // Save assistant response (including any search follow-up)
         await execute(
           "INSERT INTO chat_messages (session_id, phase_id, task_id, role, content, model) VALUES (?, ?, ?, 'assistant', ?, ?)",
-          [sessionId, phaseId || null, taskId || null, fullResponse, model]
+          [sessionId, validPhaseId, validTaskId, fullResponse, storedModel]
         );
 
         // Summarize session for Unity memory

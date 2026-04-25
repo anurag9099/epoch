@@ -20,7 +20,8 @@ function getClient() {
 
 export async function* streamOpenAI(
   systemPrompt: string,
-  messages: ChatTurn[]
+  messages: ChatTurn[],
+  model = process.env.LLM_MODEL || "gpt-5.4"
 ): AsyncGenerator<string> {
   const requestMessages = [
     { role: "system", content: systemPrompt },
@@ -56,7 +57,7 @@ export async function* streamOpenAI(
   ];
 
   const stream = await getClient().chat.completions.create({
-    model: "gpt-5.4",
+    model,
     stream: true,
     messages: requestMessages as never,
     max_completion_tokens: 4096,
